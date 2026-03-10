@@ -12,6 +12,15 @@ dotenv.config();
 
 await connectDB();
 
+// Fix: ensure email index is SPARSE so multiple patients (email: null) can register
+try {
+  await User.collection.dropIndex("email_1").catch(() => {});
+  await User.collection.createIndex({ email: 1 }, { unique: true, sparse: true });
+  console.log("Email index: sparse unique (allows multiple null)");
+} catch (e) {
+  console.warn("Index fix:", e.message);
+}
+
 async function ensureInstitutions() {
   const names = ["Singapore General Hospital", "National University Hospital", "Tan Tock Seng Hospital"];
   for (const name of names) {
@@ -103,7 +112,7 @@ await ensureRooms();
 await ensureDoctorSchedules();
 await ensureSystemUsers();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);

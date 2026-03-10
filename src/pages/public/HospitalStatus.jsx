@@ -27,24 +27,19 @@ export default function HospitalStatus() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">Hospital Status</h1>
-          <p className="text-sm text-zinc-500 mt-1">Live system overview</p>
-        </div>
-        <div className="text-xs text-zinc-500">
-          Backend: <span className="font-mono">{import.meta.env.VITE_API_BASE_URL || "http://localhost:5001"}</span>
-        </div>
+      <div>
+        <h1 className="text-2xl font-semibold text-slate-900">Hospital Status</h1>
+        <p className="text-sm text-slate-500 mt-1">Live system overview</p>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="text-sm text-red-700">Error: {error}</div>
           <div className="mt-2 text-xs text-zinc-600">Tip: make sure backend is running and VITE_API_BASE_URL matches.</div>
         </div>
       ) : !snapshot ? (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <div className="text-sm text-zinc-600">Loading snapshot…</div>
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="text-sm text-slate-600">Loading snapshot…</div>
         </div>
       ) : (
         <>
@@ -60,12 +55,6 @@ export default function HospitalStatus() {
             <Stat label="Alert level" value={alert.label} tone={alert.tone} />
           </div>
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-            <div className="text-sm text-zinc-900 font-medium">Notes</div>
-            <div className="mt-2 text-sm text-zinc-600">
-              This dashboard pulls live data from the Node/Express API.
-            </div>
-          </div>
         </>
       )}
     </div>

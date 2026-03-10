@@ -21,14 +21,9 @@ export const registerPatient = async (req, res) => {
   if (exists) return res.status(409).json({ message: "NRIC or email already registered" });
 
   const hashed = await hashPassword(password);
-  const user = await User.create({
-    nric: nricNorm,
-    dob: dob ? new Date(dob) : null,
-    password: hashed,
-    role: "patient",
-    displayName: displayName || "",
-    email: email ? email.toLowerCase().trim() : null
-  });
+  const doc = { nric: nricNorm, dob: dob ? new Date(dob) : null, password: hashed, role: "patient", displayName: displayName || "" };
+  if (email) doc.email = email.toLowerCase().trim();
+  const user = await User.create(doc);
 
   const token = signToken(user);
   res.status(201).json({ token, user: { id: user._id, role: user.role, nric: user.nric, displayName: user.displayName } });

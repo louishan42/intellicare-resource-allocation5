@@ -434,7 +434,7 @@ export default function AdminDashboard() {
             <table className="w-full text-sm">
               <thead className="bg-zinc-50 text-zinc-600">
                 <tr>
-                  <th className="text-left font-medium px-4 py-3">Patient</th>
+                  <th className="text-left font-medium px-4 py-3">Name</th>
                   <th className="text-left font-medium px-4 py-3">Specialty</th>
                   <th className="text-left font-medium px-4 py-3">Doctor</th>
                   <th className="text-left font-medium px-4 py-3">When</th>

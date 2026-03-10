@@ -137,6 +137,15 @@ If you later restrict CORS and see errors, add your Vercel URL to the allowed or
 
 ---
 
+## Troubleshooting: Backend Error
+
+If you see "Cannot reach API" or backend errors:
+1. **Vercel:** Add `VITE_API_BASE_URL` = your Render URL in Settings → Environment Variables, then redeploy.
+2. **Render:** Ensure backend is Live. Check Logs for MongoDB/startup errors.
+3. **MongoDB:** `MONGO_URI` in Render must be correct. Network Access: allow 0.0.0.0/0.
+
+---
+
 ## Quick Checklist
 
 - [ ] MongoDB Atlas cluster created

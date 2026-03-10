@@ -1,154 +1,144 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext.jsx";
+import Logo from "../components/Logo.jsx";
 
 export default function Login() {
   const { login, registerPatient } = useAuth();
   const nav = useNavigate();
 
-  const [mode, setMode] = useState("login");
-  const [patientMode, setPatientMode] = useState(true); // true = patient (NRIC), false = staff/admin (email)
-
+  const [patientMode, setPatientMode] = useState(true);
+  const [patientRegister, setPatientRegister] = useState(false); // Register vs Sign in for patient
   const [nric, setNric] = useState("");
   const [dob, setDob] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     try {
-      const user = mode === "register"
-        ? await registerPatient({ nric, dob, password, displayName, email })
-        : patientMode
-          ? await login({ nric, dob, password })
-          : await login({ email, password });
-
-      if (user?.role === "admin") nav("/admin", { replace: true });
-      else if (user?.role === "staff") nav("/staff", { replace: true });
-      else nav("/patient", { replace: true });
+      if (patientMode) {
+        if (patientRegister) {
+          const user = await registerPatient({ nric, dob, password, displayName });
+          nav("/patient", { replace: true });
+        } else {
+          const user = await login({ nric, dob, password });
+          nav("/patient", { replace: true });
+        }
+      } else {
+        const user = await login({ email, password });
+        if (user?.role === "admin") nav("/admin", { replace: true });
+        else if (user?.role === "staff") nav("/staff", { replace: true });
+        else nav("/patient", { replace: true });
+      }
     } catch (err) {
       setError(String(err?.message || err));
     }
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24, background: "#0b0c10" }}>
-      <div style={{ width: "100%", maxWidth: 420, background: "#111217", border: "1px solid #23242a", borderRadius: 16, padding: 24, color: "#e9e9ee" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
-          <div>
-            <div style={{ fontSize: 12, opacity: 0.7 }}>IntelliCare · Singapore</div>
-            <h1 style={{ fontSize: 20, margin: 0 }}>{mode === "register" ? "Patient Registration" : "Login"}</h1>
-            <p style={{ fontSize: 12, opacity: 0.7, margin: "4px 0 0 0" }}>Patients: NRIC + password · Staff/Admin: Email + password</p>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#f8f6f3]">
+      <div className="w-full max-w-md">
+        <Link to="/" className="inline-flex items-center gap-2 text-[#64748b] hover:text-[#0d9488] mb-8 transition">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back
+        </Link>
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-200">
+          <div className="flex items-center gap-3 mb-6">
+            <Logo className="h-12 w-12" showText={false} />
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">
+                {patientMode ? (patientRegister ? "Register" : "Sign in") : "Sign in"}
+              </h1>
+              <p className="text-sm text-slate-500">IntelliCare</p>
+            </div>
           </div>
-          <button
-            onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}
-            style={{ background: "transparent", color: "#cfcfe6", border: "1px solid #2a2b34", borderRadius: 10, padding: "8px 10px", cursor: "pointer" }}
-          >
-            {mode === "login" ? "Register" : "Back to Login"}
-          </button>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex gap-1 p-1 rounded-lg bg-slate-100">
+              <button
+                type="button"
+                onClick={() => { setPatientMode(true); setError(""); setPatientRegister(false); }}
+                className={`flex-1 py-2 rounded-md text-sm font-medium transition ${patientMode ? "bg-white text-[#0d9488] shadow-sm" : "text-slate-600"}`}
+              >
+                Patient
+              </button>
+              <button
+                type="button"
+                onClick={() => { setPatientMode(false); setError(""); }}
+                className={`flex-1 py-2 rounded-md text-sm font-medium transition ${!patientMode ? "bg-white text-[#0d9488] shadow-sm" : "text-slate-600"}`}
+              >
+                Staff / Admin
+              </button>
+            </div>
+
+            {patientMode && (
+              <div className="flex gap-1 p-1 rounded-lg bg-slate-50 border border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => { setPatientRegister(true); setError(""); }}
+                  className={`flex-1 py-2 rounded-md text-sm font-medium transition ${patientRegister ? "bg-white text-[#0d9488] shadow-sm border border-slate-200" : "text-slate-600"}`}
+                >
+                  Register
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setPatientRegister(false); setError(""); }}
+                  className={`flex-1 py-2 rounded-md text-sm font-medium transition ${!patientRegister ? "bg-white text-[#0d9488] shadow-sm border border-slate-200" : "text-slate-600"}`}
+                >
+                  Sign in
+                </button>
+              </div>
+            )}
+
+            {patientMode ? (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">NRIC / FIN</label>
+                  <input value={nric} onChange={(e) => setNric(e.target.value)} placeholder="S1234567D" required className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent" />
+                </div>
+                {patientRegister && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Name (optional)</label>
+                      <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Your name" className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Date of Birth (optional)</label>
+                      <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent" />
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="staff@hospital.sg" required className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent" />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-[#0d9488] focus:border-transparent" />
+            </div>
+
+            {error && <div className="p-3 rounded-lg bg-red-50 text-red-700 text-sm">{error}</div>}
+
+            <button type="submit" className="w-full py-3 rounded-lg bg-[#0d9488] text-white font-semibold hover:bg-[#0f766e] transition">
+              {patientMode && patientRegister ? "Register" : "Sign in"}
+            </button>
+          </form>
+
+          <p className="mt-4 text-xs text-slate-500 text-center">
+            {patientMode ? "Patients use NRIC." : "Staff and admin use email."}
+          </p>
         </div>
-
-        {mode === "login" && (
-          <div style={{ marginBottom: 12, display: "flex", gap: 8 }}>
-            <button
-              type="button"
-              onClick={() => { setPatientMode(true); setError(""); }}
-              style={{ flex: 1, padding: 8, borderRadius: 10, border: patientMode ? "1px solid #4a9eff" : "1px solid #2a2b34", background: patientMode ? "#1a2a40" : "transparent", color: "#e9e9ee", cursor: "pointer" }}
-            >
-              Patient (NRIC)
-            </button>
-            <button
-              type="button"
-              onClick={() => { setPatientMode(false); setError(""); }}
-              style={{ flex: 1, padding: 8, borderRadius: 10, border: !patientMode ? "1px solid #4a9eff" : "1px solid #2a2b34", background: !patientMode ? "#1a2a40" : "transparent", color: "#e9e9ee", cursor: "pointer" }}
-            >
-              Staff / Admin (Email)
-            </button>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
-          {mode === "register" && (
-            <>
-              <label style={{ display: "grid", gap: 6 }}>
-                <span style={{ fontSize: 12, opacity: 0.8 }}>NRIC / FIN</span>
-                <input value={nric} onChange={(e) => setNric(e.target.value)} placeholder="S1234567D" style={inputStyle} />
-              </label>
-              <label style={{ display: "grid", gap: 6 }}>
-                <span style={{ fontSize: 12, opacity: 0.8 }}>Date of Birth</span>
-                <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} style={inputStyle} />
-              </label>
-              <label style={{ display: "grid", gap: 6 }}>
-                <span style={{ fontSize: 12, opacity: 0.8 }}>Display name</span>
-                <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Your name" style={inputStyle} />
-              </label>
-              <label style={{ display: "grid", gap: 6 }}>
-                <span style={{ fontSize: 12, opacity: 0.8 }}>Email (optional, for notifications)</span>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@example.com" style={inputStyle} />
-              </label>
-            </>
-          )}
-
-          {mode === "login" && patientMode && (
-            <>
-              <label style={{ display: "grid", gap: 6 }}>
-                <span style={{ fontSize: 12, opacity: 0.8 }}>NRIC / FIN</span>
-                <input value={nric} onChange={(e) => setNric(e.target.value)} placeholder="S1234567D" style={inputStyle} />
-              </label>
-              <label style={{ display: "grid", gap: 6 }}>
-                <span style={{ fontSize: 12, opacity: 0.8 }}>Date of Birth (optional verification)</span>
-                <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} style={inputStyle} />
-              </label>
-            </>
-          )}
-
-          {mode === "login" && !patientMode && (
-            <label style={{ display: "grid", gap: 6 }}>
-              <span style={{ fontSize: 12, opacity: 0.8 }}>Email</span>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="staff@hospital.sg" style={inputStyle} />
-            </label>
-          )}
-
-          <label style={{ display: "grid", gap: 6 }}>
-            <span style={{ fontSize: 12, opacity: 0.8 }}>Password</span>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" style={inputStyle} />
-          </label>
-
-          {error && <div style={{ color: "#ff8b8b", fontSize: 12 }}>{error}</div>}
-
-          <button type="submit" style={primaryBtn}>
-            {mode === "register" ? "Create account" : "Login"}
-          </button>
-
-          <div style={{ fontSize: 12, opacity: 0.7, lineHeight: 1.4 }}>
-            Switch to <strong>Patient (NRIC)</strong> or <strong>Staff/Admin (Email)</strong> above. Patients register with NRIC, DOB, and password.
-          </div>
-        </form>
       </div>
     </div>
   );
 }
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  borderRadius: 12,
-  border: "1px solid #2a2b34",
-  background: "#0f1015",
-  color: "#e9e9ee",
-  outline: "none"
-};
-
-const primaryBtn = {
-  width: "100%",
-  padding: "10px 12px",
-  borderRadius: 12,
-  border: "1px solid #2a2b34",
-  background: "#1b1d27",
-  color: "#e9e9ee",
-  cursor: "pointer",
-  fontWeight: 600
-};

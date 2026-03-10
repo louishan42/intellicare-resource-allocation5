@@ -24,7 +24,7 @@ export default function Departments() {
       render: (r) => (
         <div className="text-sm">
           <span className="font-medium">{r.availableBeds}</span>
-          <span className="text-zinc-400"> / {r.capacity}</span>
+          <span className="text-slate-400"> / {r.capacity}</span>
         </div>
       ),
     },
@@ -42,16 +42,16 @@ export default function Departments() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Departments</h1>
-        <p className="text-sm text-zinc-500 mt-1">Live data from backend</p>
+        <h1 className="text-2xl font-semibold text-slate-900">Departments</h1>
+        <p className="text-sm text-slate-500 mt-1">Live data from backend</p>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="text-sm text-red-700">Error: {error}</div>
         </div>
       ) : (
-        <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
           <Table columns={columns} rows={rows} />
         </div>
       )}

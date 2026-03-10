@@ -88,7 +88,7 @@ export const createAppointment = async (req, res) => {
 
   const appt = await Appointment.create({
     patientUserId: user.id,
-    patientName: user.displayName || user.nric || "Patient",
+    patientName: (user.displayName && String(user.displayName).trim()) ? String(user.displayName).trim() : "Patient",
     patientNric: user.nric || "",
     institutionId: institutionId || null,
     institutionName,
@@ -134,7 +134,15 @@ export const listMyAppointments = async (req, res) => {
 
 export const listAllAppointments = async (req, res) => {
   const appts = await Appointment.find({}).sort({ startTime: -1 }).lean();
-  res.json(appts);
+  const userIds = [...new Set(appts.map(a => a.patientUserId).filter(Boolean))];
+  const users = await User.find({ _id: { $in: userIds } }).select("_id displayName").lean();
+  const userMap = Object.fromEntries(users.map(u => [String(u._id), u.displayName]));
+  const enriched = appts.map(a => {
+    const displayName = userMap[String(a.patientUserId)];
+    const name = (displayName && String(displayName).trim()) ? String(displayName).trim() : "Patient";
+    return { ...a, patientName: name };
+  });
+  res.json(enriched);
 };
 
 export const getQueueForDoctor = async (req, res) => {

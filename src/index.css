@@ -5,3 +5,92 @@
 :root {
   color-scheme: light;
 }
+
+body {
+  font-family: "Outfit", system-ui, sans-serif;
+}
+
+@keyframes heartbeat-line {
+  0% { stroke-dashoffset: 300; opacity: 0.5; }
+  20% { stroke-dashoffset: 0; opacity: 1; }
+  40% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: -300; opacity: 0.5; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-8px) translateX(4px); }
+  50% { transform: translateY(-4px) translateX(-4px); }
+  75% { transform: translateY(-10px) translateX(2px); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.4); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-heartbeat-line {
+  animation: heartbeat-line 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2.5s ease-out infinite;
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 20s linear infinite;
+}
+
+/* Booking success modal */
+@keyframes modal-enter {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes checkmark-draw {
+  0% { stroke-dashoffset: 28; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes success-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgb(13 148 136 / 0.4); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 12px rgb(13 148 136 / 0); }
+}
+
+@keyframes confetti-float {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  20% { opacity: 1; transform: translateY(-20px) scale(1); }
+  100% { opacity: 0; transform: translateY(-80px) scale(0.8); }
+}
+
+.animate-modal-enter {
+  animation: modal-enter 0.35s ease-out forwards;
+}
+
+.animate-checkmark-draw {
+  animation: checkmark-draw 0.5s ease-out 0.15s forwards;
+  stroke-dasharray: 28;
+  stroke-dashoffset: 28;
+}
+
+.animate-success-pulse {
+  animation: success-pulse 1.5s ease-in-out 2;
+}

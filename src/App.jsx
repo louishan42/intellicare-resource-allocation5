@@ -6,6 +6,7 @@ import PatientDashboard from "./pages/PatientDashboard.jsx";
 import PatientBooking from "./pages/PatientBooking.jsx";
 import MyBookings from "./pages/MyBookings.jsx";
 import EditBooking from "./pages/EditBooking.jsx";
+import BookingDetail from "./pages/BookingDetail.jsx";
 import StaffDashboard from "./pages/StaffDashboard.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminBookingLoad from "./pages/AdminBookingLoad.jsx";
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="book" element={<PatientBooking />} />
         <Route path="bookings" element={<MyBookings />} />
         <Route path="bookings/:id/edit" element={<EditBooking />} />
+        <Route path="bookings/:id" element={<BookingDetail />} />
       </Route>
 
       <Route path="/status" element={<RequireAuth roles={["patient", "admin", "staff"]}><AppShell /></RequireAuth>}>

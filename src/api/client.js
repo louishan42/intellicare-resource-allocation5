@@ -6,10 +6,15 @@ function authHeader() {
 }
 
 async function doFetch(url, opts) {
+  const fullUrl = url.startsWith("http") ? url : `${BASE}${url}`;
   try {
-    return await fetch(url, opts);
+    return await fetch(fullUrl, opts);
   } catch (err) {
-    throw new Error(err?.message === "Failed to fetch" ? "Cannot reach server. Is the backend running?" : String(err?.message || err));
+    const isNetwork = err?.message === "Failed to fetch" || err?.name === "TypeError";
+    const hint = typeof window !== "undefined" && window.location?.hostname?.includes("vercel")
+      ? " Add VITE_API_BASE_URL in Vercel → Project Settings → Environment Variables (e.g. https://your-api.onrender.com) and redeploy."
+      : " Is the backend running?";
+    throw new Error(isNetwork ? `Cannot reach API.${hint}` : String(err?.message || err));
   }
 }
 
