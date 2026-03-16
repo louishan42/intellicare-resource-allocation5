@@ -10,6 +10,7 @@ import BookingDetail from "./pages/BookingDetail.jsx";
 import StaffDashboard from "./pages/StaffDashboard.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminBookingLoad from "./pages/AdminBookingLoad.jsx";
+import AdminSecurity from "./pages/admin/AdminSecurity.jsx";
 import CheckInKiosk from "./pages/CheckInKiosk.jsx";
 import HospitalStatus from "./pages/public/HospitalStatus.jsx";
 import Departments from "./pages/public/Departments.jsx";
@@ -52,6 +53,7 @@ export default function App() {
         <Route element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="booking-load" element={<AdminBookingLoad />} />
+          <Route path="security" element={<AdminSecurity />} />
         </Route>
       </Route>
 

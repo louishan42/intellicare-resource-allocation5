@@ -45,16 +45,28 @@ export default function AppShell() {
             {user?.role === "admin" ? "Overview" : "Home"}
           </NavLink>
           {user?.role === "admin" && (
-            <NavLink
-              to="/admin/booking-load"
-              className={({ isActive }) =>
-                `block px-4 py-2.5 rounded-xl text-sm font-medium transition ${
-                  isActive ? "bg-zinc-900 text-white" : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-                }`
-              }
-            >
-              Booking Load
-            </NavLink>
+            <>
+              <NavLink
+                to="/admin/booking-load"
+                className={({ isActive }) =>
+                  `block px-4 py-2.5 rounded-xl text-sm font-medium transition ${
+                    isActive ? "bg-zinc-900 text-white" : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                  }`
+                }
+              >
+                Booking Load
+              </NavLink>
+              <NavLink
+                to="/admin/security"
+                className={({ isActive }) =>
+                  `block px-4 py-2.5 rounded-xl text-sm font-medium transition ${
+                    isActive ? "bg-zinc-900 text-white" : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                  }`
+                }
+              >
+                Security
+              </NavLink>
+            </>
           )}
           <NavLink
             to="/status"

@@ -14,6 +14,7 @@ import announcementRoutes from "./routes/announcementRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import institutionRoutes from "./routes/institutionRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
+import securityRoutes from "./routes/securityRoutes.js";
 
 dotenv.config();
 
@@ -36,5 +37,6 @@ app.use("/api/announcements", announcementRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/institutions", institutionRoutes);
 app.use("/api/schedule", scheduleRoutes);
+app.use("/api/security", securityRoutes);
 
 export default app;
